@@ -3,25 +3,19 @@ import './App.css';
 import HomePage from './pages/homepage/homepage.component.jsx';
 import {Switch, Route} from 'react-router-dom';
 import ShopPage from './pages/shop/shop.component.jsx'
-
-const HatsPage = props => {
-  console.log(props);
-  <div>
-    {/* <Link to='/topis'>Topics</Link> */}
-    <button onClick = {() => props.history.push('/topics)>')}>Topics</button>
-    <h1>SHOP PAGE</h1>
-  </div>
-}
-
+import Header from './components/header/header.component.jsx';
+import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 
 // render the homepage for '/'
 //
 function App() {
   return (
     <div>
+      <Header/>
       <Switch>
         <Route exact path='/' component={HomePage} />
         <Route path='/shop' component={ShopPage}/>
+        <Route path='/signin' component={SignInAndSignUpPage}/>
       </Switch>
     </div>
   );

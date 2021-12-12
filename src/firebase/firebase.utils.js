@@ -32,4 +32,3 @@ const firebaseConfig = {
     })
 
 
-//   export default firebase;

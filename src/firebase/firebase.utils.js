@@ -1,5 +1,5 @@
 import {initializeApp} from 'firebase/app'
-import 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import {getAuth, signInWithPopup, GoogleAuthProvider} from 'firebase/auth';
 
 
@@ -12,23 +12,40 @@ const firebaseConfig = {
     appId: "1:65320074675:web:284eb2e9f6d8d116789fc6",
     measurementId: "G-5Q1LEYPBNT"
   };
+
+  export const firebase = initializeApp(firebaseConfig);
+
+  const db = getFirestore(firebase);
+
+  export const createUserProfileDocument = async (userAuth, additionalData) => {
+    if (!userAuth) return;
   
-  const app = initializeApp(firebaseConfig);
+    const userRef = doc(db, "users", userAuth.uid);
+
+    const snapShot = await getDoc(userRef);
+ 
+    if (!snapShot.exists) {
+      const { displayName, email } = userAuth;
+      const createdAt = new Date();
+      try {
+        await userRef.set({
+          displayName,
+          email,
+          createdAt,
+          ...additionalData
+        });
+      } catch (error) {
+        console.log('error creating user', error.message);
+      }
+    }
+    return userRef;
+  }
+
+  
   const provider = new GoogleAuthProvider();
+  export const auth = getAuth();
   provider.setCustomParameters({prompt: 'select_account'});
 
-  export const auth = getAuth();
-  export const signInWithGoogle = ()=> signInWithPopup(auth, provider)
-    .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-    })
-    .catch((error) => {
-        const errorCode= error.code;
-        const errorMessage = error.message;
-        const email = error.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-    })
 
-//
+  export const signInWithGoogle = () => signInWithPopup(auth, provider)
+    

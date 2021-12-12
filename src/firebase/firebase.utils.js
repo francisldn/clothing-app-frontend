@@ -31,4 +31,4 @@ const firebaseConfig = {
         const credential = GoogleAuthProvider.credentialFromError(error);
     })
 
-
+//
